@@ -31,18 +31,31 @@ export class AppComponent {
       x += Sides.get(step)[1];
       y += Sides.get(step)[0];
     });
-    return x === 0 && y === 0
+    return x === 0 && y === 0;
   }
 
-   stockList  (listOfArt:string[], listOfCat:string[])  {
+  stockList(listOfArt: string[], listOfCat: string[]) {
+    const obj = listOfCat.reduce((o, key) => ({ ...o, [key]: 0 }), {});
 
-    const obj = Object.assign({},listOfCat)
-    console.log(obj)
-   return JSON.stringify(listOfArt.reduce((acc,cur,ind)=>{
-     const value = [...cur].findIndex((val)=>val===" ")
-     console.log(acc[cur.charAt(0)]=`(${acc[cur.charAt(0)]} : ${cur.slice(value)})`)
-     return acc
-   },{}))
-   
+    const computed = listOfArt.reduce((acc, cur, ind) => {
+      const value = [...cur].findIndex((val) => val === ' ');
+      const valueToNum = Number(cur.slice(value));
+      obj[cur.charAt(0)] += valueToNum;
+      return obj;
+    }, obj);
+
+    let string = '';
+    for (let key in computed) {
+      if (isNaN(computed[key]) || computed[key] == undefined) {
+        delete computed[key];
+      } else {
+        string += `(${key} : ${computed[key]}) - `;
+      }
+    }
+   console.log(Object.entries(computed) )
+    const strArr = [...string];
+    strArr.splice(-3, 3);
+    // console.log(strArr);
+    return strArr.join('');
   }
 }
